@@ -1,0 +1,58 @@
+/*
+ * input_processing.c
+ *
+ *  Created on: Nov 5, 2022
+ *      Author: HELLO SON
+ */
+
+
+#include "input_reading.h"
+#include "input_processing.h"
+#include "output_display.h"
+#include "main.h"
+#include "timer.h"
+
+#define RES 0
+#define INC 1
+#define DEC 2
+
+static int time;
+void INIT()
+{
+	time=0;
+	HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, SET);
+	blinking_flag=1;
+}
+void blinkled()
+{
+	if(blinking_flag==1)
+	{
+		HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+		setTimerBlink(1000);
+	}
+}
+void increaseTime(int time)
+{
+	time++;
+	if(time>9)
+	{
+		time=0;
+	}
+}
+void DecreaseTime(int time)
+{
+	time--;
+	if(time<0)
+	{
+		time=9;
+	}
+}
+void fsm_simple_buttons_run(void)
+{
+	blinkled();
+	if(is_button_pressed(RES))
+	{
+		time=9;
+	}
+	display7SEG(time);
+}

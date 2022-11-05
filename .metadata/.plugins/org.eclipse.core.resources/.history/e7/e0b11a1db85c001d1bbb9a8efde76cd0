@@ -1,0 +1,15 @@
+/*
+ * timer.c
+ *
+ *  Created on: Nov 5, 2022
+ *      Author: HELLO SON
+ */
+#include "timer.h"
+int Time_cycle=10; //10ms
+int blinking_counter=0;
+int
+void setTimerBlink(int duration)
+{
+
+}
+

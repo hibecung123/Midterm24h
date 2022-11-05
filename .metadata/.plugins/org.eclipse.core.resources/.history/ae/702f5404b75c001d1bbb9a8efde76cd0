@@ -1,0 +1,12 @@
+/*
+ * timer.c
+ *
+ *  Created on: Nov 5, 2022
+ *      Author: HELLO SON
+ */
+
+extern int blinking_flag;
+extern int couting_flag;
+
+void setTimerblink(int duration)
+

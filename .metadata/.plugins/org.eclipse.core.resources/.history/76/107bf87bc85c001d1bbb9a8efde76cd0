@@ -1,0 +1,73 @@
+/*
+ * input_reading.c
+ *
+ *  Created on: Nov 5, 2022
+ *      Author: HELLO SON
+ */
+
+#include "input_reading.h"
+#include "main.h"
+
+#define NO_OF_BUTTONS 3
+#define BUTTON_IS_PRESSED GPIO_PIN_RESET
+#define BUTTON_IS_RELEASED GPIO_PIN_SET
+
+static GPIO_PinState buttonBuffer [NO_OF_BUTTONS]={BUTTON_IS_RELEASED,BUTTON_IS_RELEASED,BUTTON_IS_RELEASED};
+static GPIO_PinState debounceButtonBuffer1 [NO_OF_BUTTONS];
+static GPIO_PinState debounceButtonBuffer2 [NO_OF_BUTTONS];
+static GPIO_PinState debounceButtonBuffer3 [NO_OF_BUTTONS]={BUTTON_IS_RELEASED,BUTTON_IS_RELEASED,BUTTON_IS_RELEASED};
+static uint16_t counterForButtonPress3s [NO_OF_BUTTONS];
+
+static uint16_t buttonAddress[NO_OF_BUTTONS]={RES_BUTTON_Pin,INC_BUTTON_Pin,DEC_BUTTON_Pin};
+static GPIO_TypeDef* buttonPort[NO_OF_BUTTONS]={RES_BUTTON_GPIO_Port,INC_BUTTON_GPIO_Port,DEC_BUTTON_GPIO_Port};
+static int DURATION_FOR_AUTO_BUTTON=300;
+void button_reading(void)
+{
+	for(uint8_t i=0;i<NO_OF_BUTTONS;i++)
+	{
+		debounceButtonBuffer2[i]=debounceButtonBuffer1[i];
+		debounceButtonBuffer1[i]=HAL_GPIO_ReadPin(buttonPort[i], buttonAddress[i]);
+		if(debounceButtonBuffer1[i]==debounceButtonBuffer2[i])
+		{
+			if(debounceButtonBuffer3[i]!=debounceButtonBuffer1[i])
+			{
+			debounceButtonBuffer3[i]=debounceButtonBuffer1[i];
+			if(debounceButtonBuffer1[i]==BUTTON_IS_PRESSED)
+			{
+				buttonBuffer[i]=BUTTON_IS_PRESSED;
+				if(counterForButtonPress3s[i]<DURATION_FOR_AUTO_BUTTON)
+				{
+					counterForButtonPress3s[i]++;
+				}
+				else
+				{
+					debounceButtonBuffer3[i]=BUTTON_IS_RELEASED;
+					DURATION_FOR_AUTO_BUTTON=100;
+				}
+			}
+			else{
+				DURATION_FOR_AUTO_BUTTON=300;
+			}
+
+			}
+		}
+	}
+}
+
+unsigned char is_button_pressed(uint8_t index)
+{
+	if(index>=NO_OF_BUTTONS) return 0;
+	else
+	{
+		if(buttonBuffer[index]==BUTTON_IS_PRESSED)
+		{
+			buttonBuffer[index]=BUTTON_IS_RELEASED;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+
+
+

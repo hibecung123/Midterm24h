@@ -1,0 +1,50 @@
+/*
+ * timer.c
+ *
+ *  Created on: Nov 5, 2022
+ *      Author: HELLO SON
+ */
+#include "timer.h"
+#include "input_reading.h"
+#include "main.h"
+int Time_cycle=10; //10ms
+int blinking_counter=0;
+int counting_counter=0;
+int blinking_flag=0;
+int counting_flag=0;
+void setTimerBlink(int duration)
+{
+	blinking_counter=duration/10;
+	blinking_flag=0;
+}
+void setTimerCount(int duration)
+{
+	counting_counter=duration/10;
+	counting_flag=0;
+}
+void timerRun()
+{
+	if(blinking_counter>0)
+	{
+		blinking_counter--;
+		if(blinking_counter<=0)
+		{
+			blinking_flag=1;
+		}
+	}
+	if(counting_counter>0)
+	{
+		counting_counter--;
+		if(counting_counter<=0)
+		{
+			counting_flag=1;
+		}
+	}
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+	if(htim->Instance == TIM2){
+		timerRun();
+		button_reading();
+	}
+}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;Midterm_24h/Core/Inc/input_heading.h&apos; to &apos;input_reading.h&apos;" description="Rename resource &apos;input_heading.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Inc/input_heading.h" name="input_reading.h" stamp="1667616623911" updateReferences="true"/>
+</session>
